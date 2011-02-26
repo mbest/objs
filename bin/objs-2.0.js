@@ -170,14 +170,16 @@ new function()
 		//There is superclass to extend from.
 		if( superclass )
 		{
-			func[$superclass] = superclass;
 			superclass[$extending] = 1;
 			func[$prototype] = new superclass();
 			delete superclass[$extending];
 						
 			/*
-			 * Each class in Objs have a "$super" shortcut to SuperClass.prototype.
+			 * Each class in Objs have a "$super" shortcut to its superclass
+			 * prototype and a "$superclass" shortcut to its superclass
+			 * constructor.
 			 */
+			func[$superclass] = superclass;
 			func[$super] = superclass[$prototype];
 		}
 			
