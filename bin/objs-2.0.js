@@ -171,14 +171,14 @@ new function()
 		if( superclass )
 		{
 			func[$superclass] = superclass;
-			func[$superclass][$extending] = 1;
-			func[$prototype] = new func[$superclass]();
-			delete func[$superclass][$extending];
+			superclass[$extending] = 1;
+			func[$prototype] = new superclass();
+			delete superclass[$extending];
 						
 			/*
 			 * Each class in Objs have a "$super" shortcut to SuperClass.prototype.
 			 */
-			func[$super] = func[$superclass][$prototype];
+			func[$super] = superclass[$prototype];
 		}
 			
 		/*
