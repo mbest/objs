@@ -23,12 +23,9 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/.
  *
  */
-var Objs = new function()
+var Objs;
+new function()
 {
-	//----------------------------------------------------------------------
-	// Public methods
-	//
-
 	/**
 	 * Associate a class constructor with a classpath.
 	 * 
@@ -41,7 +38,17 @@ var Objs = new function()
 	 * call will be taken into account.
 	 *
 	 * @param {String} classpath
-	 * 		The classpath of the class to register.
+	 * 		The classpath of the class to create or retrieve.
+	 * 
+	 * 		<P>Retrieve:
+	 * 		If <code>classpath</code> is the only parameter passed when calling
+	 * 		Objs, the class constructor corresponding to the given classpath is
+	 * 		returned. A strict null is returned if no constructor for the given
+	 * 		classpath exists.
+	 * 
+	 * 	 	<P>Create:
+	 * 		If <code>classpath</code> parameter is followed by one or two valid
+	 * 		parameters it will create a class.
 	 *
 	 * @param {Function} superclass
 	 * 		(optional) A superclass to inherit from.
@@ -55,14 +62,14 @@ var Objs = new function()
 	 * 		protobject declaration.
 	 *
 	 * @return {Function}
-	 * 		The constructor method of the registered class.
+	 * 		The constructor method of the class corresponding to the given
+	 * 		classpath.
 	 */
-	this.add = function( classpath )
+	Objs = function( classpath, arg1, protobject )
 	{
 		var 
 			protobject/*Object*/,
 			func/*Function*/,
-			arg1/*Object*/ = arguments[1],
 			arg1Type/*String*/ = typeof arg1,
 			propName/*String*/,
 			i/*Number*/,
@@ -71,6 +78,14 @@ var Objs = new function()
 
 		if( typeof classpath != Tstring )
 			throw Error( $InvalidClassPath + classpath );
+		
+		/*
+		 * If <code>classpath</code> was the only parameter passed to Objs, the
+		 * developer only wants to get the class constructor corresponding to
+		 * the given classpath.
+		 */
+		if( !arg1 && !protobject )		
+			return map[classpath] || null;
 
 		func = map[classpath] = function()
 		{
@@ -125,8 +140,6 @@ var Objs = new function()
 			}
 			else
 				func[$superclass] = arg1;
-			
-			protobject = arguments[2];		
 		}
 
 		//There is superclass to extend from.
@@ -162,21 +175,6 @@ var Objs = new function()
 		}
 
 		return func;
-	}
-
-	/**
-	 * Return the class constructor for a given classpath.
-	 * 
-	 * @param {String} classpath
-	 * 		The classpath of the requested class constructor.	
-	 * 
-	 * @return {Function}
-	 * 		The class constructor corresponding to the given classpath if it
-	 * 		exists or strict <code>null</code> if it doesn't.	
-	 */
-	this.get = function( classpath )
-	{
-		return map[classpath] || null;
 	}
 
 	//----------------------------------------------------------------------
