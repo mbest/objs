@@ -43,8 +43,8 @@ new function()
 	 * 		<P>Retrieve:
 	 * 		If <code>classpath</code> is the only parameter passed when calling
 	 * 		Objs, the class constructor corresponding to the given classpath is
-	 * 		returned. A strict null is returned if no constructor for the given
-	 * 		classpath exists.
+	 * 		returned. A new class constructor is returned if no constructor for
+	 * 		the given classpath first exists.
 	 * 
 	 * 	 	<P>Create:
 	 * 		If <code>classpath</code> parameter is followed by one or two valid
@@ -65,28 +65,75 @@ new function()
 	 * 		The constructor method of the class corresponding to the given
 	 * 		classpath.
 	 */
-	Objs = function( classpath, arg1, protobject )
+	Objs = function( classpath, superclass, protobject )
 	{
 		var 
-			protobject/*Object*/,
 			func/*Function*/,
-			arg1Type/*String*/ = typeof arg1,
+			superclassType/*String*/ = typeof superclass,
 			propName/*String*/,
 			i/*Number*/,
 			arr/*Array*/
 		;
 
+
+
+		// --------------------------------------------------------------------
+		// Overloading:
+		//
+
+		/*
+		 * Calling Objs with something else than a String as first parameter
+		 * throws an error.
+		 */
 		if( typeof classpath != Tstring )
 			throw Error( $InvalidClassPath + classpath );
+
+		/*
+		 * If the 2nd argument is a superclass classpath.
+		 */
+		if( superclassType == Tstring )
+		{
+			/*
+			 * If the developer try to inherit from an unregistered class
+			 * it is really important for him to be informed of the error.
+			 */
+			if( !map[superclass] ) 
+				throw Error( $UnexistentSuperClass + superclass );
+			
+			superclass = map[superclass];
+		}
+
+		else
 		
+		/*
+		 * If the 2nd argument is "protobject" not "superclass".
+		 */
+		if( superclassType == "object" )
+		{
+			protobject = superclass;
+			superclass = null;
+		}
+
+
+
+		// --------------------------------------------------------------------
+		// Retrieve
+		//
+
 		/*
 		 * If <code>classpath</code> was the only parameter passed to Objs, the
 		 * developer only wants to get the class constructor corresponding to
 		 * the given classpath.
 		 */
-		if( !arg1 && !protobject )		
-			return map[classpath] || null;
+		if( !superclass && !protobject && map[classpath] )		
+			return map[classpath];
 
+
+
+		// --------------------------------------------------------------------
+		// Create
+		//
+		
 		func = map[classpath] = function()
 		{
 			//Allow YUICompressor to munge it as a local var
@@ -117,34 +164,13 @@ new function()
 					callee[$prototype][$initialize]
 				)
 					callee[$prototype][$initialize].apply( this, arguments );
-	
-				//TODO If the developer do not declare an initialize method on the first called constructor prototype he may think that its super initialize method will be called automatically
 			}
-		}
-		
-		/*
-		 * If the 2nd argument is "protobject".
-		 */
-		if( arg1Type == "object" )
-			protobject = arg1;
-		else
-		{
-			if( arg1Type == Tstring )
-			{
-				/*
-				 * If the developer try to inherit from an unregistered class
-				 * it is really important for him to be informed of the error.
-				 */
-				if( !( func[$superclass] = Objs.get(arg1) ) )
-					throw Error( $UnexistentSuperClass + arg1 );
-			}
-			else
-				func[$superclass] = arg1;
 		}
 
 		//There is superclass to extend from.
-		if( func[$superclass] )
+		if( superclass )
 		{
+			func[$superclass] = superclass;
 			func[$superclass][$extending] = 1;
 			func[$prototype] = new func[$superclass]();
 			delete func[$superclass][$extending];
@@ -181,24 +207,8 @@ new function()
 	// Private properties
 	//
 	
-	/**
-	 * A map of <code>ClassInfo</code> objects used to manage classes
-	 * registrations.
-	 * 
-	 * @type {Object}
-	 * @private
-	 */
-	var map/*Object*/ = {},
-	
-	/**
-	 * A list of non enumerable <code>Object</code> methods
-	 * (Internet Explorer).
-	 * 
-	 * @type {Array}
-	 * @private
-	 */
-	nonEnumerable = [ "toString", "valueOf", "toLocaleString" ],
-	
+	var
+
 	//Dictionnary of strings used to reduce the generated file size.
 	Tstring/*String*/ = "string",
 	$super/*String*/ = "$super",
@@ -210,6 +220,23 @@ new function()
 	$constructing/*String*/ = $prefix + "c",
 	$extending/*String*/ = $prefix + "e",
 	$UnexistentSuperClass/*String*/ = "Unexistent super" + $class + ": ",
-	$InvalidClassPath/*String*/ = "Invalid " + $class + "path: "
-	;
+	$InvalidClassPath/*String*/ = "Invalid " + $class + "path: ",
+	
+	/**
+	 * A map of <code>ClassInfo</code> objects used to manage classes
+	 * registrations.
+	 * 
+	 * @type {Object}
+	 * @private
+	 */
+	 map/*Object*/ = {},
+	
+	/**
+	 * A list of non enumerable <code>Object</code> methods
+	 * (Internet Explorer).
+	 * 
+	 * @type {Array}
+	 * @private
+	 */
+	nonEnumerable = [ "toString", "valueOf", "toLocaleString" ]	;
 }

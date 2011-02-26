@@ -46,97 +46,44 @@ var ObjsTest = new YUITest.TestCase
 	     * Cleans up everything that was created by setUp().
 	     */
 	    tearDown: function(){},
-
+		
 		/**
-		 * Tests Objs.add method invalid classpath argument errors
+		 * Tests Objs(classpath) parameter.
 		 */
-		testAddClasspathArgument: function()
+		testRetrieveInvalidClasspathParameter: function()
 		{
 			var expectedErrorMessage/*String*/ = "Invalid classpath: ";
 
 			YUITest.Assert.throwsError
 			(
-				expectedErrorMessage + "undefined",
-				function(){Objs.add()},
-				"An error should have been thrown."
-			);
-		
-			YUITest.Assert.throwsError
-			(
 				expectedErrorMessage + "null",
-				function(){Objs.add(null)},
+				function(){Objs(null)},
 				"An error should have been thrown."
 			);
 					
 			YUITest.Assert.throwsError
 			(
 				expectedErrorMessage + "undefined",
-				function(){Objs.add(undefined)},
+				function(){Objs(undefined)},
 				"An error should have been thrown."
 			);
-		},
-
-		/**
-		 * Tests Objs.add method invalid superclass argument errors
-		 */
-		testAddSuperClassAsStringArgument: function()
-		{
-			var expectedErrorMessage/*String*/ = "Unexistent superclass: ";
-
+			
+			//Not a string
 			YUITest.Assert.throwsError
 			(
-				expectedErrorMessage + "",
-				function(){Objs.add("MyClass","")},
-				"An error should have been thrown."
-			);
-			
-			YUITest.Assert.throwsError
-			(
-				expectedErrorMessage + "MyUnexistentSuperClass",
-				function(){Objs.add("MyClass","MyUnexistentSuperClass")},
+				expectedErrorMessage + "[object Object]",
+				function(){Objs({})},
 				"An error should have been thrown."
 			);
 		},
 
 		/**
-		 * Tests Objs.get method.
+		 * Tests Objs(classpath) class constrcutor creation.
 		 */
-		testGetArgument: function()
-		{
-			var classpath/*String*/ = "com.website.myclasspath.TestGetArgument";
-
-			YUITest.Assert.isNull
-			(
-				Objs.get(),
-				"Expected Objs.get() to return strict null"
-			);
-			
-			YUITest.Assert.isNull
-			(
-				Objs.get(null),
-				"Expected Objs.get(null) to return strict null"
-			);
-			
-			YUITest.Assert.isNull
-			(
-				Objs.get(undefined),
-				"Expected Objs.get(undefined) to return strict null"
-			);
-			
-			YUITest.Assert.isNull
-			(
-				Objs.get(classpath),
-				"Expected Objs.get() to return strict null when a class is not registered"
-			);
-		},
-
-		/**
-		 * Tests Objs.add() using Objs.get() method.
-		 */
-		testAdd: function()
+		testSimpleCreate: function()
 		{
 			var classpath/*String*/ = "com.website.myclasspath.TestAdd";
-			var constructor/*Function*/ = Objs.add( classpath );
+			var constructor/*Function*/ = Objs( classpath );
 			
 			YUITest.Assert.isInstanceOf
 			(
@@ -145,47 +92,99 @@ var ObjsTest = new YUITest.TestCase
 				"Expected constructor to be an instance of Function"
 			);
 		},
+
+		/**
+		 * Tests Objs method invalid classpath argument errors
+		 */
+		testCreateInvalidClasspathParameter: function()
+		{
+			var expectedErrorMessage/*String*/ = "Invalid classpath: ";
+		
+			YUITest.Assert.throwsError
+			(
+				expectedErrorMessage + "null",
+				function(){Objs(null,{})},
+				"An error should have been thrown."
+			);
+			
+			YUITest.Assert.throwsError
+			(
+				expectedErrorMessage + "undefined",
+				function(){Objs(undefined,{})},
+				"An error should have been thrown."
+			);
+			
+			//Not a string
+			YUITest.Assert.throwsError
+			(
+				expectedErrorMessage + "[object Object]",
+				function(){Objs({},{})},
+				"An error should have been thrown."
+			);
+		},
+
+		/**
+		 * Tests Objs method invalid superclass argument errors
+		 */
+		testCreateSuperClassAsStringParameter: function()
+		{
+			var expectedErrorMessage/*String*/ = "Unexistent superclass: ";
+
+			YUITest.Assert.throwsError
+			(
+				expectedErrorMessage + "",
+				function(){Objs("MyClass","")},
+				"An error should have been thrown."
+			);
+			
+			YUITest.Assert.throwsError
+			(
+				expectedErrorMessage + "MyUnexistentSuperClass",
+				function(){Objs("MyClass","MyUnexistentSuperClass")},
+				"An error should have been thrown."
+			);
+		},
 		
 		/**
-		 * Tests Objs.add() using Objs.get() method.
+		 * Tests Objs() using Objs() method.
 		 */
-		testAddAndGet: function()
+		testCreateAndGet: function()
 		{
 			var classpath/*String*/ = "com.website.myclasspath.TestAddAndGet";
-			var constructor/*Function*/ = Objs.add( classpath );
+			var constructor/*Function*/ = Objs( classpath );
 			
 			YUITest.Assert.areEqual
 			(
 				constructor,
-				Objs.get(classpath),
-				"Expected Objs.get() to return the registered constructor"
+				Objs(classpath),
+				"Expected Objs( classpath ) to return the registered constructor"
 			);
 		},
 		
 		/**
-		 * Tests Objs.add() called twice with the same classpath.
+		 * Tests Objs(classpath) called twice with the same classpath.
 		 */
-		testAddTwice: function()
+		testCreateTwice: function()
 		{
 			var classpath/*String*/ = "com.website.myclasspath.TestAddTwice";
-			var constructor1/*Function*/ = Objs.add( classpath );
-			var constructor2/*Function*/ = Objs.add( classpath );
+			var constructor1/*Function*/ = Objs( classpath );
+			var constructor2/*Function*/ = Objs( classpath );
 			
-			YUITest.Assert.areNotEqual
+			YUITest.Assert.areEqual
 			(
 				constructor1,
 				constructor2,
-				"Expected constructor1 and constructor2 not to be the same"
+				"Expected constructor1 and constructor2 to be the same"
 			);
 		},
 		
 		/**
-		 * Tests Objs.add() method <code>protobject</code> used as 2nd argument.
+		 * Tests Objs() method <code>protobject</code> used as 2nd argument.
 		 */
 		testProtobject: function()
 		{
 			var classpath/*String*/ = "com.website.myclasspath.TestProtobject";
-			var MyClass/*Function*/ = Objs.add
+			var MyClass/*Function*/ = Objs
 			(
 				classpath,
 				{
@@ -209,7 +208,7 @@ var ObjsTest = new YUITest.TestCase
 		},
 		
 		/**
-		 * Tests Objs.add() method with <code>SuperClass</code> used as 2nd
+		 * Tests Objs() method with <code>SuperClass</code> used as 2nd
 		 * argument.
 		 */
 		testSuperClassAsFunction: function()
@@ -218,8 +217,8 @@ var ObjsTest = new YUITest.TestCase
 			var subclasspath/*String*/ = "com.website.myclasspath.MySubClass0";
 			var sub2classpath/*String*/ = "com.website.myclasspath.MySub2Class0";
 			
-			var SuperClass/*Function*/ = Objs.add( superclasspath );
-			var SubClass/*Function*/ = Objs.add( subclasspath, SuperClass );
+			var SuperClass/*Function*/ = Objs( superclasspath );
+			var SubClass/*Function*/ = Objs( subclasspath, SuperClass );
 
 			YUITest.Assert.isInstanceOf
 			(
@@ -228,7 +227,7 @@ var ObjsTest = new YUITest.TestCase
 				"Expected SubClass to be an instance of SuperClass"
 			);
 			
-			var sub2class/*Function*/ = Objs.add( sub2classpath, SubClass );
+			var sub2class/*Function*/ = Objs( sub2classpath, SubClass );
 
 			YUITest.Assert.isInstanceOf
 			(
@@ -239,7 +238,7 @@ var ObjsTest = new YUITest.TestCase
 		},
 		
 		/**
-		 * Tests Objs.add() method with <code>SuperClass</code> used as String
+		 * Tests Objs() method with <code>SuperClass</code> used as String
 		 * as 2nd argument.
 		 */
 		testSuperClassAsString: function()
@@ -248,8 +247,8 @@ var ObjsTest = new YUITest.TestCase
 			var subclasspath/*String*/ = "com.website.myclasspath.MySubClass1";
 			var sub2classpath/*String*/ = "com.website.myclasspath.MySub2Class1";
 			
-			var SuperClass/*Function*/ = Objs.add( superclasspath );
-			var SubClass/*Function*/ = Objs.add( subclasspath, superclasspath );
+			var SuperClass/*Function*/ = Objs( superclasspath );
+			var SubClass/*Function*/ = Objs( subclasspath, superclasspath );
 
 			YUITest.Assert.isInstanceOf
 			(
@@ -258,7 +257,7 @@ var ObjsTest = new YUITest.TestCase
 				"Expected SubClass to be an instance of SuperClass"
 			);
 			
-			var sub2class/*Function*/ = Objs.add( sub2classpath, subclasspath );
+			var sub2class/*Function*/ = Objs( sub2classpath, subclasspath );
 
 			YUITest.Assert.isInstanceOf
 			(
@@ -269,7 +268,7 @@ var ObjsTest = new YUITest.TestCase
 		},
 			
 		/**
-		 * Tests Objs.add() method with <code>SuperClass</code> used as 2nd
+		 * Tests Objs() method with <code>SuperClass</code> used as 2nd
 		 * argument and <code>protobject</code> used as 3nd argument.
 		 */
 		testSuperClassPlusProtobject: function()
@@ -277,7 +276,7 @@ var ObjsTest = new YUITest.TestCase
 			var superclasspath/*String*/ = "com.website.myclasspath.MySuperClass2";
 			var subclasspath/*String*/ = "com.website.myclasspath.MySubClass2";
 			
-			var SuperClass/*Function*/ = Objs.add
+			var SuperClass/*Function*/ = Objs
 			(
 				subclasspath,
 				{ 
@@ -285,7 +284,7 @@ var ObjsTest = new YUITest.TestCase
 				}
 			);
 			
-			var SubClass/*Function*/ = Objs.add
+			var SubClass/*Function*/ = Objs
 			(
 				subclasspath,
 				SuperClass,
@@ -326,20 +325,20 @@ var ObjsTest = new YUITest.TestCase
 			var sub2classpath/*String*/ = "com.website.myclasspath.MySub2Class3";
 	
 			var proof/*String*/ = "";
-			var SuperClass/*Function*/ = Objs.add(superclasspath);
+			var SuperClass/*Function*/ = Objs(superclasspath);
 			SuperClass.prototype.initialize = function()
 			{
 				proof += "1";
 			}
 
-			var SubClass/*Function*/ = Objs.add( subclasspath, SuperClass );
+			var SubClass/*Function*/ = Objs( subclasspath, SuperClass );
 			SubClass.prototype.initialize = function()
 			{
 				SubClass.$super.initialize.call(this);
 				proof += "2";
 			}
 
-			var Sub2class/*Function*/ = Objs.add( sub2classpath, SubClass );
+			var Sub2class/*Function*/ = Objs( sub2classpath, SubClass );
 			Sub2class.prototype.initialize = function()
 			{
 				Sub2class.$super.initialize.call(this);
@@ -360,27 +359,27 @@ var ObjsTest = new YUITest.TestCase
 		 * Tests if the initialize method of each class is called and respect
 		 * the recursion order.
 		 */
-		testInitializeArguments: function()
+		testInitializeParameters: function()
 		{
 			var superclasspath/*String*/ = "com.website.myclasspath.MySuperClass4";
 			var subclasspath/*String*/ = "com.website.myclasspath.MySubClass4";
 			var sub2classpath/*String*/ = "com.website.myclasspath.MySub2Class4";
 	
 			var proof/*String*/ = "";
-			var SuperClass/*Function*/ = Objs.add(superclasspath);
+			var SuperClass/*Function*/ = Objs(superclasspath);
 			SuperClass.prototype.initialize = function(arg)
 			{
 				proof += arg;
 			}
 
-			var SubClass/*Function*/ = Objs.add( subclasspath, SuperClass );
+			var SubClass/*Function*/ = Objs( subclasspath, SuperClass );
 			SubClass.prototype.initialize = function(arg)
 			{
 				SubClass.$super.initialize.call( this, "1" );
 				proof += arg;
 			}
 
-			var Sub2class/*Function*/ = Objs.add( sub2classpath, SubClass );
+			var Sub2class/*Function*/ = Objs( sub2classpath, SubClass );
 			Sub2class.prototype.initialize = function(arg)
 			{
 				Sub2class.$super.initialize.call( this, "2" );
@@ -409,14 +408,14 @@ var ObjsTest = new YUITest.TestCase
 			var sub2classpath/*String*/ = "com.website.myclasspath.MySub2Class5";
 
 			var proof/*String*/ = "";
-			var SuperClass/*Function*/ = Objs.add(superclasspath);
+			var SuperClass/*Function*/ = Objs(superclasspath);
 			SuperClass.prototype.initialize = function()
 			{
 				proof += "1";
 			}
 
-			var SubClass/*Function*/ = Objs.add( subclasspath, SuperClass );
-			var Sub2class/*Function*/ = Objs.add( sub2classpath, SubClass );
+			var SubClass/*Function*/ = Objs( subclasspath, SuperClass );
+			var Sub2class/*Function*/ = Objs( sub2classpath, SubClass );
 			Sub2class.prototype.initialize = function()
 			{
 				Sub2class.$super.initialize.call(this);
@@ -445,20 +444,20 @@ var ObjsTest = new YUITest.TestCase
 			var sub2classpath/*String*/ = "com.website.myclasspath.MySub2Class6";
 
 			var proof/*String*/ = "";
-			var SuperClass/*Function*/ = Objs.add(superclasspath);
+			var SuperClass/*Function*/ = Objs(superclasspath);
 			SuperClass.prototype.initialize = function()
 			{
 				proof += "1";
 			}
 
-			var SubClass/*Function*/ = Objs.add( subclasspath, SuperClass );
+			var SubClass/*Function*/ = Objs( subclasspath, SuperClass );
 			SubClass.prototype.initialize = function()
 			{
 				SubClass.$super.initialize.call(this);
 				proof += "2";
 			}
 			
-			var Sub2class/*Function*/ = Objs.add( sub2classpath, SubClass );
+			var Sub2class/*Function*/ = Objs( sub2classpath, SubClass );
 			
 			
 			//TODO Need to be explored ... there's something still not well managed that happens here
@@ -484,20 +483,20 @@ var ObjsTest = new YUITest.TestCase
 			var sub2classpath/*String*/ = "com.website.myclasspath.MySub2Class7";
 
 			var proof/*String*/ = "";
-			var SuperClass/*Function*/ = Objs.add(superclasspath);
+			var SuperClass/*Function*/ = Objs(superclasspath);
 			SuperClass.prototype.initialize = function()
 			{
 				this.proof += "1";
 			}
 
-			var SubClass/*Function*/ = Objs.add( subclasspath, SuperClass );
+			var SubClass/*Function*/ = Objs( subclasspath, SuperClass );
 			SubClass.prototype.initialize = function()
 			{
 				SubClass.$super.initialize.call(this);
 				this.proof += "2";
 			}
 			
-			var Sub2class/*Function*/ = Objs.add( sub2classpath, SubClass );
+			var Sub2class/*Function*/ = Objs( sub2classpath, SubClass );
 			Sub2class.prototype.proof = "0";
 			
 			//TODO Need to be explored ... there's something still not well managed that happens here
@@ -520,7 +519,7 @@ var ObjsTest = new YUITest.TestCase
 			var subclasspath/*String*/ = "com.website.myclasspath.MySubClass8";
 
 			var proof/*String*/ = "";
-			var SuperClass/*Function*/ = Objs.add
+			var SuperClass/*Function*/ = Objs
 			(
 				superclasspath,
 				{
@@ -538,7 +537,7 @@ var ObjsTest = new YUITest.TestCase
 				}
 			);
 
-			var SubClass/*Function*/ = Objs.add
+			var SubClass/*Function*/ = Objs
 			(
 				subclasspath,
 				SuperClass,
