@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title> Objs 2.0 "Hello, World!" example </title>
+	<script type="text/javascript" src="https://github.com/tekool/objs/raw/master/bin/objs-2.0-min.js"></script>
+</head>
+
+ <body>
+
+  <script type="text/javascript">
+  <!--
+
+  	/// Class declaration
+
+	/**
+	 * Create a constructor for the "HelloWorld" class using the
+	 * "myclasspath.myapp" namespace.
+	 */
+	Objs( "com.example.helloworld.HelloWorld",
+	{
+
+		/**
+		 * Declare a "message" class property.
+		 *
+		 * @type {String}
+		 */
+		message: null,		
+
+		/**
+		 * Declare an "initialize" method that will automatically be called on
+		 * construct.
+		 *
+		 * @param {String} message
+		 *		Add a message parameter that will be passed from the "HelloWorld"
+		 *		constructor to this method on construct.
+		 */
+		initialize: function( message )
+		{
+			this.message = message;
+		},
+
+		/**
+		 * Declare a public giveMeHello method.
+		 */
+		sayHello: function()
+		{
+			alert(this.message);
+		}
+
+	});
+
+	/// Class instanciation
+
+	//Get a reference to the HelloWorld class constructor.
+	var HelloWorld = Objs("com.example.helloworld.HelloWorld");
+
+	//Build an HelloWord class instance using JavaScript native "new" keyword.
+	var helloWorldInstance = new HelloWorld("Hello, World!");
+
+	//Displays an "Hello, World!" message alert.
+	helloWorldInstance.sayHello();
+  //-->
+  </script>
+ </body>
+</html>

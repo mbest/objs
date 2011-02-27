@@ -27,15 +27,12 @@ var Objs;
 new function()
 {
 	/**
-	 * Associate a class constructor with a classpath.
-	 * 
-	 * <P>
-	 * A classpath is a namespace plus an associated class name.
-	 * eg. : Objs.register('com.mywebsite.somenamespace.MyClass',myConstructor)
+	 * Create or retrieve a class constructor using its unique classpath.
 	 * 
 	 * <P>
 	 * If a class is associated twice with the same namespace, only the last
-	 * call will be taken into account.
+	 * call will be taken into account if it defines a protobject or a
+	 * superclass.
 	 *
 	 * @param {String} classpath
 	 * 		The classpath of the class to create or retrieve.
