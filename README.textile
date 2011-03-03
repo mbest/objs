@@ -38,6 +38,7 @@ The project was built using "YUICompressor":http://yuilibrary.com/downloads/#yui
 "YUIant":http://www.ubik-ingenierie.com/miscellanous/YUIAnt/.
 
 h3. Unit Tests
+
 Unit tests are built upon "YUI Test Standalone Library":http://yuilibrary.com/yuitest/.
 
 The tests run by opening the /index.html. The test runner and Unit Test
