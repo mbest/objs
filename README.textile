@@ -1,7 +1,17 @@
 h2. Description
 
-A minimalistic library intended to help in using namespaces and class
-inheritance in JavaScript.
+A minimalistic library intended to help in using namespaces and class inheritance in JavaScript.
+
+Objs enables:
+* Class declaration using namespaces
+* Access to class constructors using their namespaces
+* Simplified inheritance syntax which follow ExtJS, Prototype, Mootools… conventions
+* Shortcuts to superclass and its methods 
+* A complete library to help in using OOP for only 734 chars
+
+h2. Getting Started
+
+* The wiki on Github: "Wiki":https://github.com/tekool/objs/wiki
 
 h2. License
 
@@ -19,14 +29,3 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see http://www.gnu.org/licenses/.
-
-h2. Release
-
---------------------------------------------------------------------------
-Release Date: 02/06/2011
-Platform: JavaScript
-Version: 1
-Revision: 1
-Author: Frederic Saunier - www.tekool.net
-License: GNU General Public License version 3
---------------------------------------------------------------------------
