@@ -500,7 +500,7 @@ var ObjsTest = new YUITest.TestCase
 			Sub2class.prototype.proof = "0";
 			
 			//TODO Need to be explored ... there's something still not well managed that happens here
-			var testClass/*sub2class*/ = new Sub2class();
+			var testClass/*Sub2class*/ = new Sub2class();
 
 			YUITest.Assert.areEqual
 			(
@@ -559,7 +559,7 @@ var ObjsTest = new YUITest.TestCase
 			);
 			
 			//TODO Need to be explored ... there's something still not well managed that happens here
-			var testClass/*sub2class*/ = new SubClass();
+			var testClass/*SubClass*/ = new SubClass();
 			testClass.method1();
 			testClass.method2();
 
@@ -568,6 +568,58 @@ var ObjsTest = new YUITest.TestCase
 				"SuperClassMethod1SubClassMethod1SuperClassMethod2SubClassMethod2",
 				testClass.proof,
 				"Expected methods to be called recursively in the right order"
+			);
+		},
+		
+		/**
+		 * Tests if a class can override non enumerable methods from Object.
+		 */
+		testNonEnumerable: function()
+		{
+			var classpath/*String*/ = "com.website.myclasspath.MyClass2";
+
+			var MyClass/*Function*/ = Objs
+			(
+				classpath,
+				{
+					toString : function()
+					{
+						return "toString() - okay";
+					},
+					
+					toLocaleString : function()
+					{
+						return "toLocaleString() - okay";
+					},
+					
+					valueOf : function()
+					{
+						return "valueOf() - okay";
+					}
+				}
+			);
+			
+			var testClass/*MyClass*/ = new MyClass();
+
+			YUITest.Assert.areEqual
+			(
+				"toString() - okay",
+				testClass.toString(),
+				'Expected "toString - okay"'
+			);
+
+			YUITest.Assert.areEqual
+			(
+				"toLocaleString() - okay",
+				testClass.toLocaleString(),
+				'Expected "toLocaleString - okay"'
+			);
+
+			YUITest.Assert.areEqual
+			(
+				"valueOf() - okay",
+				testClass.valueOf(),
+				'Expected "valueOf - okay"'
 			);
 		}
   	}

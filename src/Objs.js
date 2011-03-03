@@ -181,14 +181,14 @@ new function()
 		}
 			
 		/*
-		 * Protobject properties and method are copied into the prototype of
+		 * Protobject properties and methods are copied into the prototype of
 		 * the returned constructor.
 		 */
 		if( protobject )
 		{			
 			//Some Object methods are not enumerable in some browsers
 			arr = nonEnumerable.slice(0);
-			for( propName in protobject )
+			for( propName in protobject)
 				if( protobject.hasOwnProperty(propName) )
 					arr.push(propName);
 
