@@ -34,8 +34,7 @@ h2. For advanced Objs developers
 
 h3. Build
 
-The project was built using "YUICompressor":http://yuilibrary.com/downloads/#yuicompressor and 
-"YUIant":http://www.ubik-ingenierie.com/miscellanous/YUIAnt/.
+The project was built using "YUICompressor":http://yuilibrary.com/downloads/#yuicompressor and "YUIant":http://www.ubik-ingenierie.com/miscellanous/YUIAnt/.
 
 h3. Unit Tests
 
