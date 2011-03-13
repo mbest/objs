@@ -133,21 +133,18 @@ new function()
 		
 		func = map[classpath] = function()
 		{
-			//Allow YUICompressor to munge it as a local var
-			var callee/*Function*/ = arguments.callee;
-
 			/*
 			 * The constructor is not called during the extend phase:
 			 * myClass.prototype = new MySuperClass().
 			 */
-			if( !callee[$extending] )
+			if( !func[$extending] )
 			{
 				//A superclass is registered.
-				if( callee[$superclass] )
+				if( func[$superclass] )
 				{
-					callee[$superclass][$constructing] = 1;
-					callee[$superclass].call( this );
-					delete callee[$superclass][$constructing];
+					func[$superclass][$constructing] = 1;
+					func[$superclass].call( this );
+					delete func[$superclass][$constructing];
 				}
 	
 				/*
@@ -156,11 +153,11 @@ new function()
 				 */
 				if
 				(
-					!callee[$constructing]
+					!func[$constructing]
 					&&
-					callee[$prototype][$initialize]
+					func[$prototype][$initialize]
 				)
-					callee[$prototype][$initialize].apply( this, arguments );
+					func[$prototype][$initialize].apply( this, arguments );
 			}
 		}
 
