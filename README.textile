@@ -7,7 +7,7 @@ Objs enables:
 * Access to class constructors using their namespaces
 * Simplified inheritance syntax which follow ExtJS, Prototype, Mootools conventions
 * Shortcuts to superclass and its methods 
-* A complete library to help in using OOP for only 734 chars
+* A complete library to help in using OOP for only 711 chars
 
 h2. Getting Started
 
