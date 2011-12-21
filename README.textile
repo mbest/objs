@@ -7,7 +7,7 @@ Objs enables:
 * Access to class constructors using their namespaces
 * Simplified inheritance syntax which follow ExtJS, Prototype, Mootools conventions
 * Shortcuts to superclass and its methods 
-* A complete library to help in using OOP for only 711 chars
+* A complete library to help in using OOP for less than 1KB
 
 h2. Getting Started
 
@@ -43,3 +43,12 @@ Unit tests are built upon "YUI Test Standalone Library":http://yuilibrary.com/yu
 The tests run by opening the /index.html. The test runner and Unit Test
 framework loads all the libraries it needs from the /lib/yuitest folder. They
 were first built upon YUI 3.2.0 and YUITest 1.0.0 b1 standalone libraries.
+
+
+h2. Objs v2.1 Changelog
+
+* Protobject (the object used to declare class properties and methods) is now mandatory.
+* An exception is thrown when trying to import a class which isn't registered.
+* Redefining a class with the same classpath now replace it with the new class definition.
+* When the second parameter is a strict "null", the associated classpath is removed from Objs and ready for GC.
+* Each class has a new $classpath parameter reflecting the classpath with which it was declared.

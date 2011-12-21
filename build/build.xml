@@ -15,7 +15,7 @@
         </delete>
 
         <concat
-			destfile="${basedir}/bin/objs-2.0.js"
+			destfile="${basedir}/bin/objs-2.1.js"
 			append="no"
 			encoding="UTF-8"
 			outputencoding="UTF-8"
