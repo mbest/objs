@@ -3,7 +3,7 @@
 	<head>
 	  	<meta charset="utf-8">
 		<title> Objs 2.0 "Hello, Name!" example </title>
-		<script type="text/javascript" src="https://github.com/tekool/objs/raw/master/bin/objs-2.0-min.js"></script>
+		<script type="text/javascript" src="https://raw.github.com/tekool/objs/master/bin/objs-2.1-min.js"></script>
 	</head>
 
 	<body>
@@ -14,7 +14,8 @@
 		<script type="text/javascript">
 		<!--
 		
-		/// Class declaration
+		///////////////////////////////////////////////////////////////////////
+		// Class declaration
 		
 		/**
 		 * Create a constructor for the "HelloWorld" class using the
@@ -52,8 +53,9 @@
 			}
 		
 		});
-		
-		/// Class inheritance
+
+		///////////////////////////////////////////////////////////////////////
+		// Class inheritance
 		
 		/**
 		 * This creates a constructor for the "HelloName" class using the
@@ -79,7 +81,10 @@
 				HelloName.$super.initialize.call( this, "Hello, " + name + "!" );
 			}
 		});
-		
+
+		///////////////////////////////////////////////////////////////////////
+		// Class construction and instance use
+
 		//Some click handler to catch clicks on the button.
 		function clickHandler()
 		{		
