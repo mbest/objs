@@ -102,8 +102,9 @@ new function()
 			 */
 			if( second === null )
 			{
-				delete map[classpath];					
-				return;
+                func = map[classpath];
+                delete map[classpath];
+				return func;
 			}
 			
 			if( func = map[classpath] )
