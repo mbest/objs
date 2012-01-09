@@ -36,7 +36,7 @@ new function()
 	 * call will be taken into account if it defines a protobject or a
 	 * superclass.
 	 *
-	 * @param {String} first
+	 * @param {String} classpath
 	 * 		The classpath of the class to create or retrieve.
 	 * 
 	 * 		<P>Retrieve:
@@ -55,8 +55,8 @@ new function()
 	 * 		{Object} The object used to declare class properties and methods.
 	 * 		{null} A strict null will remove the associated classpath.
 	 * 
-	 * @param {Object} (optional) third
-	 * 		The object used to declare class properties and methods.
+	 * @param {Object} third
+	 * 		(optional) The object used to declare class properties and methods.
 	 *
 	 * @return {Function}
 	 * 		The constructor method of the class corresponding to the given
@@ -102,11 +102,12 @@ new function()
 			 */
 			if( second === null )
 			{
-				delete map[classpath];					
-				return;
+                func = map[path];
+                delete map[path];
+				return func;
 			}
 			
-			if( func = map[classpath] )
+			if( func = map[path] )
 				return func;
 
 			/*
@@ -128,7 +129,7 @@ new function()
 		 */
 		if( (secondType = typeof second) == Tstring )
 		{
-			superclass = map[second];
+			superclass = map[$prefix + second];
 			i = 1;
 		}
 
@@ -171,7 +172,7 @@ new function()
 		// Create
 		//
 		
-		func = map[classpath] = function()
+		func = map[path] = function()
 		{
 			/*
 			 * The constructor is not called during the extend phase:
@@ -199,7 +200,7 @@ new function()
 				)
 					func.prototype.initialize.apply( this, arguments );
 			}
-		}
+		};
 
 		/*
 		 * Each class in Objs has a "$classpath" property to identify its
@@ -246,7 +247,7 @@ new function()
 		}
 
 		return func;
-	}
+	};
 
 	//----------------------------------------------------------------------
 	// Private properties
@@ -281,4 +282,4 @@ new function()
 	 * @private
 	 */
 	nonEnumerable = [ "toString", "valueOf", "toLocaleString" ]	;
-}
+};
