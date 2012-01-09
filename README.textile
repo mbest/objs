@@ -49,8 +49,7 @@ h2. Objs v2.1.1 Changelog
 
 * Now Objs("some.classpath", null) return the removed class
 * Added one more unit test on invalid superclass parameters
-* Now when declaring/accessign/removing a class (only internally) the class name is prefixed to avoid name conflicts with any possible existing methods
-
+* Now when declaring/accessign/removing a class (only internally) the class name is prefixed to avoid name conflicts
 h2. Objs v2.1 Changelog
 
 * Protobject (the object used to declare class properties and methods) is now mandatory.
