@@ -1,40 +1,22 @@
-/**
- * @author   Frederic Saunier - www.tekool.net
- * @since    2006/02/08
- *
- * @classDescription
- * Test the Objs library methods.
- *
- * @license
- *
- * Copyright (C) 2006-2011 Frederic Saunier
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- *
+/*
+ * Copyright (C) 2006-2012 Frederic Saunier, www.tekool.net
+ * Objs may be freely distributed under the MIT license.
+ * For all details and documentation: https://github.com/tekool/objs/
  */
-
-var	$InvalidClasspath/*String*/ = "Invalid classpath: ";
-var	$UnexistentClass/*String*/ = "Unexistent class: ";
-var	$UnexistentSuperClass/*String*/ = "Unexistent superclass: ";
-var	$InvalidProtobject/*String*/ = "Invalid protobject for: ";
+var	$InvalidClasspath/*String*/ = "invalid classpath: ";
+var	$NonExistentClass/*String*/ = "non-existent class: ";
+var	$NonExistentSuperClass/*String*/ = "non-existent superclass: ";
+var	$InvalidProtobject/*String*/ = "invalid protobject for: ";
 
 var classpath/*String*/ = "MyClass";
 var superclasspath/*String*/ = "MySuperClass";
 var subclasspath/*String*/ = "MySubClass";
 var sub2classpath/*String*/ = "MySub2Class";
 
+/**
+ * @classDescription
+ * Test the Objs library methods.
+ */
 var ObjsTest = new YUITest.TestCase
 (
 	{
@@ -101,11 +83,11 @@ var ObjsTest = new YUITest.TestCase
 		/**
 		 * Tests Objs(classpath) class constructor creation.
 		 */
-		testRetrieveUnexistent: function()
+		testRetrieveNonExistent: function()
 		{
 			YUITest.Assert.throwsError
 			(
-				$UnexistentClass + classpath,
+				$NonExistentClass + classpath,
 				function(){Objs( classpath )},
 				"An error should have been thrown."
 			);
@@ -143,7 +125,7 @@ var ObjsTest = new YUITest.TestCase
 		 * Tests Objs(classpath) class constructor creation with an empty
 		 * protobject.
 		 */
-		testCreate: function()
+		testCreateWithObject: function()
 		{
 			var constructor/*Function*/ = Objs( classpath, {} );
 
@@ -156,7 +138,21 @@ var ObjsTest = new YUITest.TestCase
 
 		/**
 		 * Tests Objs(classpath) class constructor creation with an empty
-		 * protobject.
+		 * function as protobject.
+		 */
+		testCreateWithFunction: function()
+		{
+			var constructor/*Function*/ = Objs( classpath, new function(){} );
+
+			YUITest.Assert.isFunction
+			(
+				constructor,
+				"Expected constructor to be an instance of Function"
+			);
+		},
+
+		/**
+		 * Tests Objs(classpath) class removal.
 		 */
 		testRemove: function()
 		{
@@ -168,11 +164,18 @@ var ObjsTest = new YUITest.TestCase
 				"Expected constructor to be an instance of Function"
 			);
 			
-			Objs(classpath,null);
+			var removedConstructor = Objs(classpath,null);
+
+			YUITest.Assert.areEqual
+			(
+				constructor,
+				removedConstructor,
+				"Expected added constructor to be equals to removedConstructor"
+			);
 			
 			YUITest.Assert.throwsError
 			(
-				$UnexistentClass + classpath,
+				$NonExistentClass + classpath,
 				function(){Objs(classpath)},
 				"An error should have been thrown."
 			);
@@ -185,7 +188,7 @@ var ObjsTest = new YUITest.TestCase
 		{
 			YUITest.Assert.throwsError
 			(
-				$UnexistentClass + classpath,
+				$NonExistentClass + classpath,
 				function(){Objs( classpath )},
 				"An error should have been thrown."
 			);
@@ -194,22 +197,38 @@ var ObjsTest = new YUITest.TestCase
 		/**
 		 * Tests Objs method invalid superclass argument errors.
 		 */
-		testCreateWithSuperClassAsStringParameter: function()
+		testInheritingWithInvalidParameters: function()
 		{
 			YUITest.Assert.throwsError
 			(
-				$UnexistentSuperClass,
+				$NonExistentSuperClass,
 				function(){Objs(classpath,"", {})},
 				"An error should have been thrown."
 			);
 
-			YUITest.Assert.throwsError
-			(
-				$UnexistentSuperClass + superclasspath,
-				function(){Objs( classpath, superclasspath, {} )},
-				"An error should have been thrown."
-			);
-		},
+            YUITest.Assert.throwsError
+            (
+                $NonExistentSuperClass + superclasspath,
+                function(){Objs( classpath, superclasspath, {} )},
+                "An error should have been thrown."
+            );
+
+            Objs(superclasspath,{});
+
+            YUITest.Assert.throwsError
+            (
+                $InvalidProtobject + classpath,
+                function(){Objs( classpath, superclasspath )},
+                "An error should have been thrown."
+            );
+
+            YUITest.Assert.throwsError
+            (
+                $InvalidProtobject + classpath,
+                function(){Objs( classpath, superclasspath, null )},
+                "An error should have been thrown."
+            );
+        },
 
 		/**
 		 * Tests Objs() using Objs() method.
@@ -384,21 +403,21 @@ var ObjsTest = new YUITest.TestCase
 			SuperClass.prototype.initialize = function()
 			{
 				proof += "1";
-			}
+			};
 
 			var SubClass/*Function*/ = Objs( subclasspath, SuperClass, {} );
 			SubClass.prototype.initialize = function()
 			{
 				SubClass.$super.initialize.call(this);
 				proof += "2";
-			}
+			};
 
 			var Sub2class/*Function*/ = Objs( sub2classpath, SubClass, {} );
 			Sub2class.prototype.initialize = function()
 			{
 				Sub2class.$super.initialize.call(this);
 				proof += "3";
-			}
+			};
 			
 			new Sub2class();
 
@@ -421,21 +440,21 @@ var ObjsTest = new YUITest.TestCase
 			SuperClass.prototype.initialize = function(arg)
 			{
 				proof += arg;
-			}
+			};
 
 			var SubClass/*Function*/ = Objs( subclasspath, SuperClass, {} );
 			SubClass.prototype.initialize = function(arg)
 			{
 				SubClass.$super.initialize.call( this, "1" );
 				proof += arg;
-			}
+			};
 
 			var Sub2class/*Function*/ = Objs( sub2classpath, SubClass, {} );
 			Sub2class.prototype.initialize = function(arg)
 			{
 				Sub2class.$super.initialize.call( this, "2" );
 				proof += arg;
-			}
+			};
 			
 			new Sub2class("3");
 
@@ -459,7 +478,7 @@ var ObjsTest = new YUITest.TestCase
 			SuperClass.prototype.initialize = function()
 			{
 				proof += "1";
-			}
+			};
 
 			var SubClass/*Function*/ = Objs( subclasspath, SuperClass, {} );
 			var Sub2class/*Function*/ = Objs( sub2classpath, SubClass, {} );
@@ -467,7 +486,7 @@ var ObjsTest = new YUITest.TestCase
 			{
 				Sub2class.$super.initialize.call(this);
 				proof += "2";
-			}
+			};
 
 			new Sub2class();
 
@@ -491,14 +510,14 @@ var ObjsTest = new YUITest.TestCase
 			SuperClass.prototype.initialize = function()
 			{
 				proof += "1";
-			}
+			};
 
 			var SubClass/*Function*/ = Objs( subclasspath, SuperClass, {} );
 			SubClass.prototype.initialize = function()
 			{
 				SubClass.$super.initialize.call(this);
 				proof += "2";
-			}
+			};
 			
 			var Sub2class/*Function*/ = Objs( sub2classpath, SubClass, {} );
 			
@@ -521,19 +540,18 @@ var ObjsTest = new YUITest.TestCase
 		 */
 		testInitializeThis: function()
 		{
-			var proof/*String*/ = "";
 			var SuperClass/*Function*/ = Objs(superclasspath, {});
 			SuperClass.prototype.initialize = function()
 			{
 				this.proof += "1";
-			}
+			};
 
 			var SubClass/*Function*/ = Objs( subclasspath, SuperClass, {} );
 			SubClass.prototype.initialize = function()
 			{
 				SubClass.$super.initialize.call(this);
 				this.proof += "2";
-			}
+			};
 			
 			var Sub2class/*Function*/ = Objs( sub2classpath, SubClass, {} );
 			Sub2class.prototype.proof = "0";
@@ -554,7 +572,6 @@ var ObjsTest = new YUITest.TestCase
 		 */
 		testSuperMethods: function()
 		{
-			var proof/*String*/ = "";
 			var SuperClass/*Function*/ = Objs
 			(
 				superclasspath,

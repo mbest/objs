@@ -5,8 +5,8 @@
 
         <taskdef name="yuicompress" classname="com.yahoo.platform.yui.compressor.YUICompressTask">
             <classpath>
-                <pathelement path="${basedir}/build/lib/yuicompressor-2.4.2.jar"/>
-                <pathelement path="${basedir}/build/lib/yuiant.jar"/>
+                <pathelement path="${basedir}/build/lib/yuicompressor/yuicompressor-2.4.2.jar"/>
+                <pathelement path="${basedir}/build/lib/yuiant/yuiant.jar"/>
             </classpath>
         </taskdef>
 
@@ -15,7 +15,7 @@
         </delete>
 
         <concat
-			destfile="${basedir}/bin/objs-2.1.1.js"
+			destfile="${basedir}/bin/objs-2.1.2.js"
 			append="no"
 			encoding="UTF-8"
 			outputencoding="UTF-8"
@@ -30,7 +30,7 @@
 
         <yuicompress
 			charset="UTF-8"
-			linebreak="500"
+			linebreak="1000"
 			warn="true"
 			munge="yes"
 			preserveallsemicolons="false"
