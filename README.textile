@@ -15,7 +15,7 @@ h2. Getting Started
 
 h2. License
 
-Copyright (C) 2006-2012 Frederic Saunier, www.tekool.net
+Copyright (C) 2006-2012 Frederic Saunier, "www.tekool.net":http://www.tekool.net/
 Objs may be freely distributed under the MIT license.
 
 h2. For advanced Objs developers
@@ -29,11 +29,19 @@ h3. Unit Tests
 Unit tests are built upon "YUI Test Standalone Library":http://yuilibrary.com/yuitest/.
 
 The tests run by opening the /index.html. The test runner and Unit Test
-framework loads all the libraries it needs from the /lib/yuitest folder. They
+framework loads all the libraries it needs from the test/lib/ folder. They
 were first built upon YUI 3.2.0 and YUITest 1.0.0 b1 standalone libraries.
 
+h2. Changelog
 
-h2. Objs v2.1 Changelog
+h3. Objs v2.1.2
+
+* License changed to an MIT license.
+* Error message "inexistent" changed to "non-existent"
+* Two loops were needed to add class properties to its prototype, there's now only one
+* Reduced file size but reverted some changes to increase speed vs size optimizations
+
+h3. Objs v2.1
 
 * Protobject (the object used to declare class properties and methods) is now mandatory.
 * An exception is thrown when trying to import a class which isn't registered.
