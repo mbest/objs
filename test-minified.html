@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <title>Objs Test Suite - release</title>
+        <title>Objs Test Suite - minified</title>
 		
 	 	<!-- Needed by the test runner UI -->
 		<link type="text/css" rel="stylesheet" href="test/lib/fonts-min.css" />
@@ -24,14 +24,20 @@
 
     </head>
 
-	<body class="yui3-skin-sam  yui-skin-sam"> 
+	<body>
 		 
-		<h1>Objs Test Suite</h1> 
+		<h1>Objs Test Suite - minified</h1> 
 		 
-		<div id="testLogger"></div>
+		<div id="testLogger" class="yui3-skin-sam"></div>
 		
 		<script type="text/javascript">
-			runTests(["ObjsTest"]);
+			runTests
+			(
+				"Objs Test Suite - minified",
+				[
+					ObjsTest
+				]
+			);
 		</script> 
     </body>
 </html>
