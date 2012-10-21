@@ -393,31 +393,47 @@ var ObjsTest = new YUITest.TestCase
 		},
 
 		/**
-		 * Tests if the initialize method of each class is called and respect
-		 * the recursion order.
+		 * Tests if the constructor method of each class is called and respect the recursion order.
 		 */
 		testInitialize: function()
 		{
 			var proof/*String*/ = "";
-			var SuperClass/*Function*/ = Objs(superclasspath, {});
-			SuperClass.prototype.initialize = function()
-			{
-				proof += "1";
-			};
+			var SuperClass/*Function*/ = Objs
+			(
+				superclasspath,
+				{
+					constructor: function()
+					{
+						proof += "1";
+					}
+				}
+			);
 
-			var SubClass/*Function*/ = Objs( subclasspath, SuperClass, {} );
-			SubClass.prototype.initialize = function()
-			{
-				SubClass.$super.initialize.call(this);
-				proof += "2";
-			};
+			var SubClass/*Function*/ = Objs
+			(
+				subclasspath,
+				SuperClass,
+				{
+					constructor: function()
+					{
+						SubClass.$super.constructor.call(this);
+						proof += "2";
+					}
+				}
+			);
 
-			var Sub2class/*Function*/ = Objs( sub2classpath, SubClass, {} );
-			Sub2class.prototype.initialize = function()
-			{
-				Sub2class.$super.initialize.call(this);
-				proof += "3";
-			};
+			var Sub2class/*Function*/ = Objs
+			(
+				sub2classpath,
+				SubClass,
+				{
+					constructor: function()
+					{
+						Sub2class.$super.constructor.call(this);
+						proof += "3";
+					}
+				}
+			);
 			
 			new Sub2class();
 
@@ -430,29 +446,33 @@ var ObjsTest = new YUITest.TestCase
 		},
 
 		/**
-		 * Tests if the initialize method of each class is called and respect
-		 * the recursion order.
+		 * Tests if the constructor method of each class is called and respect the recursion order.
 		 */
 		testInitializeParameters: function()
 		{
 			var proof/*String*/ = "";
-			var SuperClass/*Function*/ = Objs(superclasspath, {});
-			SuperClass.prototype.initialize = function(arg)
-			{
-				proof += arg;
-			};
+			var SuperClass/*Function*/ = Objs
+			(
+				superclasspath,
+				{
+					constructor: function(arg)
+					{
+						proof += arg;
+					}
+				}
+			);
 
 			var SubClass/*Function*/ = Objs( subclasspath, SuperClass, {} );
-			SubClass.prototype.initialize = function(arg)
+			SubClass.prototype.constructor = function(arg)
 			{
-				SubClass.$super.initialize.call( this, "1" );
+				SubClass.$super.call( this, "1" );
 				proof += arg;
 			};
 
 			var Sub2class/*Function*/ = Objs( sub2classpath, SubClass, {} );
-			Sub2class.prototype.initialize = function(arg)
+			Sub2class.prototype.constructor = function(arg)
 			{
-				Sub2class.$super.initialize.call( this, "2" );
+				Sub2class.$super.call( this, "2" );
 				proof += arg;
 			};
 			
@@ -462,29 +482,28 @@ var ObjsTest = new YUITest.TestCase
 			(
 				"123",
 				proof,
-				"Expected intialize to be called with arguments recursively in the right order on each method"
+				"Expected constructor to be called with arguments recursively in the right order on each method"
 			);
 		},
 
 		/**
-		 * Tests if the initialize method respect recursion call order even if
-		 * the inheritance chain is broken by a subclass not declaring its
-		 * initialize method.
+		 * Tests if the constructor method respect recursion call order even if the inheritance
+		 * chain is broken by a subclass not declaring its constructor method.
 		 */
 		testInitializeNotDeclaredInChain: function()
 		{
 			var proof/*String*/ = "";
 			var SuperClass/*Function*/ = Objs(superclasspath, {});
-			SuperClass.prototype.initialize = function()
+			SuperClass.prototype.constructor = function()
 			{
 				proof += "1";
 			};
 
 			var SubClass/*Function*/ = Objs( subclasspath, SuperClass, {} );
 			var Sub2class/*Function*/ = Objs( sub2classpath, SubClass, {} );
-			Sub2class.prototype.initialize = function()
+			Sub2class.prototype.constructor = function()
 			{
-				Sub2class.$super.initialize.call(this);
+				Sub2class.$super.call(this);
 				proof += "2";
 			};
 
@@ -494,36 +513,33 @@ var ObjsTest = new YUITest.TestCase
 			(
 				"12",
 				proof,
-				"Expected intialize to be called with arguments recursively in the right order on each method"
+				"Expected constructor to be called with arguments recursively in the right order on each method"
 			);
 		},
 		
 		/**
-		 * Tests if the initialize method respect recursion call order even if
-		 * the inheritance chain is broken by the first class in the prototype
-		 * chain not declaring its initialize method.
+		 * Tests if the constructor method respect recursion call order even if the inheritance
+		 * chain is broken by the first class in the prototype chain not declaring its constructor
+		 * method.
 		 */
 		testInitializeNotDeclared: function()
 		{
 			var proof/*String*/ = "";
 			var SuperClass/*Function*/ = Objs(superclasspath, {});
-			SuperClass.prototype.initialize = function()
+			SuperClass.prototype.constructor = function()
 			{
 				proof += "1";
 			};
 
 			var SubClass/*Function*/ = Objs( subclasspath, SuperClass, {} );
-			SubClass.prototype.initialize = function()
+			SubClass.prototype.constructor = function()
 			{
-				SubClass.$super.initialize.call(this);
+				SubClass.$super.call(this);
 				proof += "2";
 			};
 			
 			var Sub2class/*Function*/ = Objs( sub2classpath, SubClass, {} );
-			
-			
-			//TODO Need to be explored ... there's something still not well managed that happens here
-			new Sub2class();
+			var sub2Class = new Sub2class();
 
 			YUITest.Assert.areEqual
 			(
@@ -534,22 +550,21 @@ var ObjsTest = new YUITest.TestCase
 		},
 		
 		/**
-		 * Tests if the initialize method respect recursion call order even if
-		 * the inheritance chain is broken by a subclass not declaring its
-		 * initialize method.
+		 * Tests if the constructor method respect recursion call order even if the inheritance
+		 * chain is broken by a subclass not declaring its constructor method.
 		 */
 		testInitializeThis: function()
 		{
 			var SuperClass/*Function*/ = Objs(superclasspath, {});
-			SuperClass.prototype.initialize = function()
+			SuperClass.prototype.constructor = function()
 			{
 				this.proof += "1";
 			};
 
 			var SubClass/*Function*/ = Objs( subclasspath, SuperClass, {} );
-			SubClass.prototype.initialize = function()
+			SubClass.prototype.constructor = function()
 			{
-				SubClass.$super.initialize.call(this);
+				SubClass.$super.call(this);
 				this.proof += "2";
 			};
 			

@@ -62,6 +62,7 @@ new function()
 			protobject/*Object*/,
 			propName/*String*/,
 			i/*Number*/,
+			f/*Function*/,
 			temp/*Object*/
 		;
 
@@ -88,7 +89,7 @@ new function()
 		if( second == null )
 		{
 			/*
-			 * The developer want to remove a class from the Objs class map.
+			 * The developer explicitly wants to remove a class from the Objs class map.
 			 */
 			if( second === null )
 			{
@@ -96,13 +97,13 @@ new function()
                 delete map[path];
 				return func;
 			}
-			
+
 			if( func = map[path] )
 				return func;
 
 			/*
-			 * If the developer try to obtain an unregistered class
-			 * it is really important for him to be informed of the error.
+			 * If the developer try to obtain an unregistered class it is really important for him
+			 * to be informed of the error.
 			 */
 			throw Error( $NonExistentClass + classpath );
 		}
@@ -146,14 +147,14 @@ new function()
 		if( i )
 		{
 			/*
-			 * The developer try to inherit from an unregistered superclass
-			 * it is important for him to be informed of the error.
+			 * The developer try to inherit from an unregistered superclass it is important for him
+			 * to be informed of the error.
 			 */
 			if( !superclass )
 				throw Error( $NonExistentSuperClass + second );
             /*
-             * The developer try to inherit from a registered superclass
-             * but with an undefined protobject.
+             * The developer try to inherit from a registered superclass but with an undefined
+             * protobject.
              */
 			if( !(protobject = third) )
 				throw Error( $InvalidProtobject + classpath );
@@ -165,39 +166,10 @@ new function()
 		// Create
 		//
 		
-		func = map[path] = function()
-		{
-			/*
-			 * The constructor is not called during the extend phase:
-			 * myClass.prototype = new MySuperClass().
-			 */
-			if( !func[$extending] )
-			{
-				//A superclass is registered.
-				if( func.$superclass )
-				{
-					func.$superclass[$constructing] = 1;
-					func.$superclass.call( this );
-					delete func.$superclass[$constructing];
-				}
-
-				/*
-				 * The initialize method must only be called automatically on the
-				 * first called constructor in the inheritance chain.
-				 */
-				if
-				(
-					!func[$constructing]
-					&&
-					func.prototype.initialize
-				)
-					func.prototype.initialize.apply( this, arguments );
-			}
-		};
+		func = map[path] = protobject.constructor || function(){};
 
 		/*
-		 * Each class in Objs has a "$classpath" property to identify its
-		 * classpath.
+		 * Each class in Objs has a "$classpath" property to identify its classpath.
 		 */
 		func.$classpath = classpath;
 
@@ -210,22 +182,22 @@ new function()
 		//There is superclass to extend from.
 		if( superclass )
 		{
-			superclass[$extending] = 1;
-			func.prototype = new superclass();
-			delete superclass[$extending];
-						
+			f = function(){ this.constructor = func; };
+			f.prototype = superclass.prototype;
+			func.prototype = new f();
+
 			/*
-			 * Each subclass in Objs have a "$super" shortcut to its superclass
-			 * prototype and a "$superclass" shortcut to its superclass
-			 * constructor when an Objs superclass is defined for it.
+			 * Each subclass in Objs have a "$super" shortcut to its superclass prototype and a
+			 * "$superclass" shortcut to its superclass constructor when an Objs superclass is
+			 * defined for it.
 			 */
 			func.$superclass = superclass;
 			func.$super = superclass.prototype;
 		}
 
 		/*
-		 * Protobject properties and methods are copied into the prototype of
-		 * the returned constructor.
+		 * Protobject properties and methods are copied into the prototype of the returned
+		 * constructor.
 		 */
 		temp = func.prototype;
 		for( propName in protobject )
@@ -253,8 +225,6 @@ new function()
 		 */
 		Tstring = "string",
 		$prefix = "$Objs$",
-		$constructing = $prefix + "c",
-		$extending = $prefix + "e",
 		$NonExistent = "non-existent",
 		$Invalid = "invalid",
 		$InvalidClasspath = $Invalid + " classpath: ",
