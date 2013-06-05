@@ -165,7 +165,7 @@ new function()
 		// Create
 		//
 		
-		func = map[path] = function()
+		func = map[path] = new Function("constructor", "return function " + classpath.replace(/[^\w$]/g, '_') + "(){ constructor.apply(this, arguments); };")( function()
 		{
 			/*
 			 * The constructor is not called during the extend phase:
@@ -193,7 +193,7 @@ new function()
 				)
 					func.prototype.initialize.apply( this, arguments );
 			}
-		};
+		});
 
 		/*
 		 * Each class in Objs has a "$classpath" property to identify its
@@ -213,6 +213,7 @@ new function()
 			superclass[$extending] = 1;
 			func.prototype = new superclass();
 			delete superclass[$extending];
+			func.prototype.constructor = func;
 						
 			/*
 			 * Each subclass in Objs have a "$super" shortcut to its superclass
